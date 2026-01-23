@@ -6,13 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "FinishingLine.generated.h"
 class UBoxComponent;
+
 UCLASS()
 class FPIPVMULTI_API AFinishingLine : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	AFinishLine();
+	AFinishingLine();
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,4 +39,8 @@ protected:
 	// Lógica solo servidor
 	UFUNCTION(Server, Reliable)
 	void ServerPlayerReached(APlayerController* PC);
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 };

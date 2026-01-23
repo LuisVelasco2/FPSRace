@@ -30,7 +30,11 @@ void AFinishingLine::BeginPlay()
 void AFinishingLine::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	// Solo jugadores (no queremos overlaps falsos)
+	APlayerController* PC = Cast<APlayerController>(OtherActor->GetInstigatorController());
+	if (!PC) return;
+
+	ServerPlayerReached(PC);
 }
 
 void AFinishingLine::ServerPlayerReached_Implementation(APlayerController* PC)
@@ -51,5 +55,14 @@ void AFinishingLine::ServerPlayerReached_Implementation(APlayerController* PC)
 		PC->ClientMessage(TEXT("PERDISTE!"));
 	}
 }
+
+void AFinishingLine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFinishingLine, bRaceEnded);
+	DOREPLIFETIME(AFinishingLine, WinnerPC);
+}
+
 
 
